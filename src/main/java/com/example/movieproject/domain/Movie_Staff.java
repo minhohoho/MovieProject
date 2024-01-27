@@ -1,9 +1,7 @@
 package com.example.movieproject.domain;
 
 import com.example.movieproject.common.type.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -11,6 +9,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString
+@Getter
 public class Movie_Staff {
 
     @Id
@@ -18,11 +18,11 @@ public class Movie_Staff {
     private Long MovieStaffId;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
-    @JoinColumn
+    @JoinColumn(name="movieId")
     private Movie movie;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
-    @JoinColumn
+    @JoinColumn(name="staffId")
     private Staff staff;
 
     @Enumerated(EnumType.STRING)
