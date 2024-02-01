@@ -3,11 +3,11 @@ package com.example.movieproject.domain;
 import com.example.movieproject.common.type.Age;
 import com.example.movieproject.common.type.MovieTheme;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -24,22 +24,30 @@ public class Movie{
     @Column(name="movieId")
     private Long MovieId;
 
-    @OneToMany(mappedBy = "movie")
-    private List<Movie_Staff> movieStaffList = new ArrayList<>();
-
+    @Column(nullable = false)
     private String title;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Age age;
 
     @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
     private Date openingDate;
 
+    @Column(nullable = false)
     private String duringTime;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private MovieTheme movieTheme;
 
     @Lob
+    @Column(nullable = false)
     private String content;
+
+
+
+
+
 }
