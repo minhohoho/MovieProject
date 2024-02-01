@@ -19,12 +19,21 @@ public class Movie_Staff {
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name="movieId")
+    @ToString.Exclude
     private Movie movie;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name="staffId")
+    @ToString.Exclude
+    @Setter
     private Staff staff;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Setter
     private Role role;
+
+
+
+
 }
