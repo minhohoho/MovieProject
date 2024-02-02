@@ -11,6 +11,7 @@ import java.util.Date;
 @Entity
 @Getter
 @ToString
+@Table()
 public class Staff {
 
     @Id
