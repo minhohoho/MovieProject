@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Entity
 @ToString
 @Getter
+@Table
 public class Movie_Staff {
 
     @Id

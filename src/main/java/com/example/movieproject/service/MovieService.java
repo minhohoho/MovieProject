@@ -7,9 +7,12 @@ import com.example.movieproject.domain.Staff;
 import com.example.movieproject.dto.request.MovieCreateRequestDTO;
 import com.example.movieproject.dto.request.MovieStaffCreateRequestDTO;
 import com.example.movieproject.dto.response.MovieCreateResponseDTO;
+import com.example.movieproject.dto.response.MovieResponseDTO;
 import com.example.movieproject.repository.MovieRepository;
 import com.example.movieproject.repository.Movie_StaffRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +36,12 @@ public class MovieService {
         movieStaffRepository.saveAll(movieStaffList);
 
         return MovieCreateResponseDTO.EntityToDTO(movie);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<MovieResponseDTO> getList(Pageable pageable){
+
+        return movieRepository.findAll(pageable).map(MovieResponseDTO::EntityToDTO);
     }
 
 

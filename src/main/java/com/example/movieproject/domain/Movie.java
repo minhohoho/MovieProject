@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @ToString
+@Table(indexes = {@Index(columnList = "openingDate")})
 public class Movie{
 
     @Id
