@@ -2,10 +2,13 @@ package com.example.movieproject.controller;
 
 import com.example.movieproject.common.type.Age;
 import com.example.movieproject.common.type.MovieTheme;
+import com.example.movieproject.common.type.Role;
 import com.example.movieproject.domain.Movie;
 import com.example.movieproject.dto.request.MovieCreateRequestDTO;
 import com.example.movieproject.dto.response.MovieCreateResponseDTO;
-import com.example.movieproject.dto.response.MovieResponseDTO;
+import com.example.movieproject.dto.response.MovieListResponseDTO;
+import com.example.movieproject.dto.response.MovieStaffResponseDTO;
+import com.example.movieproject.dto.response.StaffResponseDTO;
 import com.example.movieproject.service.MovieService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,11 +24,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -45,11 +47,14 @@ class MovieControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private Movie movie;
-    private MovieCreateRequestDTO movieCreateRequestDTO;
-    private MovieCreateResponseDTO movieCreateResponseDTO;
-    private Page<MovieResponseDTO> movieResponseDTOPage;
-    private PageRequest pageable;
+     Movie movie;
+     MovieCreateRequestDTO movieCreateRequestDTO;
+     MovieCreateResponseDTO movieCreateResponseDTO;
+     Page<MovieListResponseDTO> movieResponseDTOPage;
+     PageRequest pageable;
+     MovieStaffResponseDTO movieStaffResponseDTO;
+     List<StaffResponseDTO> staffResponseDTOs=new ArrayList<>();
+
     Date openDate = new Date(2012, 10, 10);
 
     @BeforeEach
@@ -85,7 +90,25 @@ class MovieControllerTest {
                 .build();
 
         pageable = PageRequest.of(0, 20);
-        movieResponseDTOPage = new PageImpl<>(List.of(MovieResponseDTO.EntityToDTO(movie)), pageable, 0);
+        movieResponseDTOPage = new PageImpl<>(List.of(MovieListResponseDTO.EntityToDTO(movie)), pageable, 0);
+
+
+        StaffResponseDTO staffResponseDTO = StaffResponseDTO.builder()
+                .name("로다주")
+                .role(Role.MAIN_ACTOR)
+                .build();
+
+        staffResponseDTOs.add(staffResponseDTO);
+
+
+        movieStaffResponseDTO = MovieStaffResponseDTO.builder()
+                .movieId(1L)
+                .title("인디아나 존스")
+                .age(Age.ALL)
+                .duringTime("2시간 3분")
+                .movieTheme(MovieTheme.SF)
+                .staffResponseDTOList(staffResponseDTOs)
+                .build();
 
     }
 
@@ -118,11 +141,29 @@ class MovieControllerTest {
         //given
         given(movieService.getList(any())).willReturn(movieResponseDTOPage);
 
+        //when && then
         mockMvc.perform(get("/api/movie/getList"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].movieId").value(movie.getMovieId()))
                 .andExpect(jsonPath("$.content[0].title").value(movie.getTitle()));
     }
+
+    @DisplayName("[영화 단건 검색]-get 요청이 오면 한편의 영화에 대한 정보를  리턴한다")
+    @Test
+    void givenMovieId_whenSelecting_thenReturnsMovieStaff() throws  Exception{
+     //given
+     given(movieService.getMovie(anyLong())).willReturn(movieStaffResponseDTO);
+
+     //when && then
+     mockMvc.perform(get("/api/movie/getMovie/1")
+             .contentType(MediaType.APPLICATION_JSON)
+             .content(objectMapper.writeValueAsString(movieStaffResponseDTO)))
+             .andExpect(status().isOk());
+
+    }
+
+
+
 }
 
 

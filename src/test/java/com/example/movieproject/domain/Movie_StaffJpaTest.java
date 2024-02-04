@@ -4,16 +4,13 @@ import com.example.movieproject.common.type.Age;
 import com.example.movieproject.common.type.MovieTheme;
 import com.example.movieproject.common.type.Role;
 import com.example.movieproject.repository.MovieRepository;
-import com.example.movieproject.repository.Movie_StaffRepository;
+import com.example.movieproject.repository.MovieStaffRepository;
 import com.example.movieproject.repository.StaffRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -35,7 +32,7 @@ public class Movie_StaffJpaTest{
     private StaffRepository staffRepository;
 
     @Autowired
-    private Movie_StaffRepository movieStaffRepository;
+    private MovieStaffRepository movieStaffRepository;
 
 
 
@@ -48,7 +45,7 @@ public class Movie_StaffJpaTest{
         Staff savedStaff= createStaff();
 
         //when
-        Movie_Staff movieStaff = movieStaffRepository.save(Movie_Staff.builder()
+        MovieStaff movieStaff = movieStaffRepository.save(MovieStaff.builder()
                 .movie(savedMovie)
                 .staff(savedStaff)
                 .role(Role.MAIN_ACTOR)
