@@ -12,13 +12,11 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class MovieResponseDTO {
+public class MovieListResponseDTO {
 
     private Long movieId;
 
     private String title;
-
-    private Double score;
 
     private Age age;
 
@@ -31,11 +29,10 @@ public class MovieResponseDTO {
 
 
 
-    public static MovieResponseDTO EntityToDTO(Movie movie){
-        return MovieResponseDTO.builder()
+    public static MovieListResponseDTO EntityToDTO(Movie movie){
+        return MovieListResponseDTO.builder()
                 .movieId(movie.getMovieId())
                 .title(movie.getTitle())
-                .score(3.6)
                 .age(movie.getAge())
                 .openingDate(movie.getOpeningDate())
                 .duringTime(movie.getDuringTime())

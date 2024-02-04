@@ -2,13 +2,10 @@ package com.example.movieproject.dto.request;
 
 import com.example.movieproject.common.type.Age;
 import com.example.movieproject.common.type.MovieTheme;
-import com.example.movieproject.common.type.Role;
 import com.example.movieproject.domain.Movie;
-import com.example.movieproject.domain.Movie_Staff;
 import io.swagger.annotations.ApiParam;
 import lombok.*;
 
-import java.security.cert.CertPathBuilder;
 import java.util.Date;
 import java.util.List;
 

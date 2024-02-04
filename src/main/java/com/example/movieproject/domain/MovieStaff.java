@@ -12,7 +12,7 @@ import javax.persistence.*;
 @ToString
 @Getter
 @Table
-public class Movie_Staff {
+public class MovieStaff {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
