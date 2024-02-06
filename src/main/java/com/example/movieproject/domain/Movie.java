@@ -46,9 +46,4 @@ public class Movie{
     @Lob
     @Column(nullable = false)
     private String content;
-
-
-
-
-
 }

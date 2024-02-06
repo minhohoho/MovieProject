@@ -139,10 +139,10 @@ class MovieControllerTest {
     void givenNoting_whenSelecting_thenReturnsPaging() throws Exception {
 
         //given
-        given(movieService.getList(any())).willReturn(movieResponseDTOPage);
+        given(movieService.getList(any(),any())).willReturn(movieResponseDTOPage);
 
         //when && then
-        mockMvc.perform(get("/api/movie/getList"))
+        mockMvc.perform(get("/api/movie/searchMovieList"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].movieId").value(movie.getMovieId()))
                 .andExpect(jsonPath("$.content[0].title").value(movie.getTitle()));

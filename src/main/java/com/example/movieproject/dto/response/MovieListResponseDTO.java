@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class MovieListResponseDTO {
+public class MovieListResponseDTO{
 
     private Long movieId;
 
