@@ -5,6 +5,7 @@ import com.example.movieproject.domain.Movie;
 import com.example.movieproject.domain.MovieStaff;
 import com.example.movieproject.dto.request.MovieCreateRequestDTO;
 import com.example.movieproject.dto.request.MovieStaffCreateRequestDTO;
+import com.example.movieproject.dto.request.SearchRequestDTO;
 import com.example.movieproject.dto.response.MovieCreateResponseDTO;
 import com.example.movieproject.dto.response.MovieListResponseDTO;
 import com.example.movieproject.dto.response.MovieStaffResponseDTO;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.example.movieproject.exceptionHandle.ErrorList.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,9 +44,12 @@ public class MovieService {
     }
 
     @Transactional(readOnly = true)
-    public Page<MovieListResponseDTO> getList(Pageable pageable){
+    public Page<MovieListResponseDTO> searchMovieList(Pageable pageable, SearchRequestDTO searchRequestDTO){
 
-        return movieRepository.findAll(pageable).map(MovieListResponseDTO::EntityToDTO);
+        if(searchRequestDTO==null){
+            return movieRepository.findAll(pageable).map(MovieListResponseDTO::EntityToDTO);
+        }
+        return movieRepository.searchMovieList(pageable,searchRequestDTO);
     }
 
     @Transactional(readOnly = true)

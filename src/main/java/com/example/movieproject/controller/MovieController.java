@@ -2,6 +2,7 @@ package com.example.movieproject.controller;
 
 
 import com.example.movieproject.dto.request.MovieCreateRequestDTO;
+import com.example.movieproject.dto.request.SearchRequestDTO;
 import com.example.movieproject.dto.response.MovieCreateResponseDTO;
 import com.example.movieproject.dto.response.MovieListResponseDTO;
 import com.example.movieproject.dto.response.MovieStaffResponseDTO;
@@ -32,11 +33,13 @@ public class MovieController {
     }
 
     @ApiOperation(value="영화 전체 검색 api && 영화 검색", notes = "영화 엔티티를 전체를 가져오고 개봉일을 기준으로 정렬하고 페이징 처리했다 ")
-    @GetMapping("/getList")
-    public ResponseEntity<Page<MovieListResponseDTO>> getList(
+    @GetMapping("/searchMovieList")
+    public ResponseEntity<Page<MovieListResponseDTO>> searchMovieList(
+            @RequestBody SearchRequestDTO searchRequestDTO,
             @PageableDefault(size=10,sort="openingDate",direction = Sort.Direction.DESC) Pageable pageable){
 
-        Page<MovieListResponseDTO> responseDTO= movieService.getList(pageable);
+
+        Page<MovieListResponseDTO> responseDTO= movieService.searchMovieList(pageable,searchRequestDTO);
 
         return ResponseEntity.ok().body(responseDTO);
     }
