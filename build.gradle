@@ -35,6 +35,8 @@ dependencies {
     //채팅관련
 
     //시큐리티
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     //생산성
     compileOnly 'org.projectlombok:lombok'
