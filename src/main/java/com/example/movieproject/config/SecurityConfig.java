@@ -1,5 +1,9 @@
 package com.example.movieproject.config;
 
+import com.example.movieproject.common.jwt.JwtAuthenticationFilter;
+import com.example.movieproject.common.jwt.JwtProvider;
+import com.example.movieproject.common.jwt.handler.JwtAccessDeniedHandler;
+import com.example.movieproject.common.jwt.handler.JwtAuthenticationEntryPoint;
 import com.example.movieproject.common.oauth2.handler.OAuth2FailHandler;
 import com.example.movieproject.common.oauth2.handler.OAuth2SuccessHandler;
 import com.example.movieproject.service.CustomOAuth2Service;
@@ -10,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 @Configuration
@@ -19,6 +24,9 @@ public class SecurityConfig {
     private final CustomOAuth2Service oauth2Service;
     private final OAuth2SuccessHandler oauth2SuccessHandler;
     private final OAuth2FailHandler oauth2FailHandler;
+    private final JwtProvider jwtProvider;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
 
     @Bean
@@ -26,10 +34,18 @@ public class SecurityConfig {
 
         http
                 .formLogin().disable()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler);
+
+
         http.authorizeRequests()
-                .antMatchers("/oauth2/**").permitAll()
+                .antMatchers("/oauth2/**","","/api/movie/searchList","/api/movie/**","/api/staff/**") // 현재 기능 테스트를 위해 임시로 품
+                .permitAll()
                 .anyRequest().authenticated();
 
         http.oauth2Login()

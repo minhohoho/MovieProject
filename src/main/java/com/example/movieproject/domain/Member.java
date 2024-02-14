@@ -21,6 +21,7 @@ public class Member extends BaseEntity {
     @Column(name="memberId")
     private Long memberId;
 
+    @Column(nullable = false,unique = true)
     private String email;
 
     private String name;
