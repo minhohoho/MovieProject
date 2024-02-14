@@ -38,6 +38,14 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         return userPrincipal;
     }
 
+    public static UserPrincipal save(Long memberId,UserRole role){
+        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role.name()));
+        UserPrincipal userPrincipal = new UserPrincipal(memberId, "", authorities);
+        return userPrincipal;
+
+    }
+
+
 
     @Override
     public String getPassword() {
