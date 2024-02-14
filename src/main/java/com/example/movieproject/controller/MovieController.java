@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,6 +25,7 @@ public class MovieController {
     private final MovieService movieService;
     @ApiOperation(value="영화 생성 api",notes = "영화 엔티티를 생성하고 영화에 소속된 스태프도 저장한다")
     @PostMapping("/create")
+    //@Secured("{}")
     public ResponseEntity<MovieCreateResponseDTO> createMovie(
             @RequestBody MovieCreateRequestDTO requestDTO){
 
