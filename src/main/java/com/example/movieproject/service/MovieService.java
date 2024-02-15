@@ -9,10 +9,12 @@ import com.example.movieproject.dto.request.SearchRequestDTO;
 import com.example.movieproject.dto.response.MovieCreateResponseDTO;
 import com.example.movieproject.dto.response.MovieListResponseDTO;
 import com.example.movieproject.dto.response.MovieStaffResponseDTO;
+import com.example.movieproject.dto.response.MovieWithScoreResponseDTO;
 import com.example.movieproject.exceptionHandle.MovieException;
 import com.example.movieproject.repository.MovieRepository;
 import com.example.movieproject.repository.MovieStaffRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,14 +23,15 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.example.movieproject.exceptionHandle.ErrorList.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MovieService {
 
     private final MovieRepository movieRepository;
     private final MovieStaffRepository movieStaffRepository;
+
 
     @Transactional
     public MovieCreateResponseDTO createMovie(MovieCreateRequestDTO requestDTO){
@@ -53,11 +56,16 @@ public class MovieService {
     }
 
     @Transactional(readOnly = true)
-    public MovieStaffResponseDTO getMovie(Long movieId){
+    public MovieWithScoreResponseDTO getMovie(Long movieId,double averageScore){
 
         movieRepository.findById(movieId).orElseThrow(()->new MovieException(NOT_EXIST_MOVIE));
 
-        return movieStaffRepository.findMovieAndStaffInfo(movieId);
+        MovieStaffResponseDTO movieStaffResponseDTO = movieStaffRepository.findMovieAndStaffInfo(movieId);
+
+        return MovieWithScoreResponseDTO.builder()
+                .movieStaffResponseDTO(movieStaffResponseDTO)
+                .averageScore(averageScore)
+                .build();
     }
 
 
