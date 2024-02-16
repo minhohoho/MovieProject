@@ -26,10 +26,10 @@ public class ReviewCreateRequestDTO {
 
     public static Review dtoToEntity(ReviewCreateRequestDTO requestDTO,Long movieId,Long memberId){
         return Review.builder()
-                .memberId(Member.builder()
+                .member(Member.builder()
                         .memberId(memberId)
                         .build())
-                .MovieId(Movie.builder()
+                .movie(Movie.builder()
                         .MovieId(movieId)
                         .build())
                 .content(requestDTO.getContent())
