@@ -21,12 +21,12 @@ public class Review extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name="memberId")
     @ToString.Exclude
-    private Member memberId;
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name="movieId")
     @ToString.Exclude
-    private Movie MovieId;
+    private Movie movie;
 
     @Column(nullable = false)
     private String content;

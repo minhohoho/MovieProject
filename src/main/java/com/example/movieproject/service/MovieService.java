@@ -62,6 +62,8 @@ public class MovieService {
 
         MovieStaffResponseDTO movieStaffResponseDTO = movieStaffRepository.findMovieAndStaffInfo(movieId);
 
+        averageScore=Math.round(averageScore*10)/10.0;
+
         return MovieWithScoreResponseDTO.builder()
                 .movieStaffResponseDTO(movieStaffResponseDTO)
                 .averageScore(averageScore)

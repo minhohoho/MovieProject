@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.ArrayList;
@@ -55,12 +56,13 @@ public class JwtProvider implements InitializingBean {
     }
 
     public TokenResponseDTO createToken(Long memberId, UserRole role){
-        Long now = System.currentTimeMillis();
+        Date now = new Date();
+
 
             String accessToken = Jwts.builder()
                     .setHeaderParam("typ","JWT")
                     .setHeaderParam("alg","HS512")
-                    .setExpiration(new Date(now+accessTokenValidityInMilliseconds))
+                    .setExpiration(new Date(now.getTime()+accessTokenValidityInMilliseconds))
                     .setSubject("access-token")
                     .claim(MEMBER_ID_KEY,memberId)
                     .claim(AUTHORITIES_KEY,role)
@@ -70,7 +72,7 @@ public class JwtProvider implements InitializingBean {
         String refreshToken = Jwts.builder()
                 .setHeaderParam("typ","JWT")
                 .setHeaderParam("alg","HS512")
-                .setExpiration(new Date(now+refreshTokenValidityInMilliseconds))
+                .setExpiration(new Date(now.getTime()+refreshTokenValidityInMilliseconds))
                 .setSubject("refresh-token")
                 .claim(MEMBER_ID_KEY,memberId)
                 .signWith(signingKey,SignatureAlgorithm.HS512)
@@ -107,19 +109,14 @@ public class JwtProvider implements InitializingBean {
        }
 
     public boolean validateToken(String token) {
-        try {
-            Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token);
-            return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token", e);
-        } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token", e);
-        } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token", e);
-        } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty.", e);
-        }
-        return false;
+            try{
+                if(!StringUtils.hasText(token)){
+                    return false;
+                }
+                return  getClaims(token).getExpiration().after(new Date());
+          }catch(Exception e){
+              return false;
+          }
     }
 
     public Boolean reissueToken(String refreshToken){

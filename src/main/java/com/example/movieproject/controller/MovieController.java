@@ -5,7 +5,6 @@ import com.example.movieproject.dto.request.MovieCreateRequestDTO;
 import com.example.movieproject.dto.request.SearchRequestDTO;
 import com.example.movieproject.dto.response.MovieCreateResponseDTO;
 import com.example.movieproject.dto.response.MovieListResponseDTO;
-import com.example.movieproject.dto.response.MovieStaffResponseDTO;
 import com.example.movieproject.dto.response.MovieWithScoreResponseDTO;
 import com.example.movieproject.service.MovieService;
 import com.example.movieproject.service.ReviewService;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -54,7 +52,7 @@ public class MovieController {
     @GetMapping("/getMovie/{movieId}")
     public ResponseEntity<MovieWithScoreResponseDTO> getMovie(
             @PathVariable Long movieId){
-        double averageScore = reviewService.getMovieReviewScore(movieId);
+        double averageScore = reviewService.averageScore(movieId);
 
          MovieWithScoreResponseDTO movieWithScoreResponseDTO=movieService.getMovie(movieId,averageScore);
 
