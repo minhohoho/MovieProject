@@ -78,7 +78,8 @@ public class CustomOAuth2Service implements OAuth2UserService<OAuth2UserRequest,
 
 
     private Member updateUser(Member user, OAuth2UserInfo oAuth2UserInfo) {
-        return null;
+
+        return memberRepository.save(user.update(oAuth2UserInfo));
     }
 
 

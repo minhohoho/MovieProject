@@ -34,14 +34,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 log.info("security 객체 저장 완료");
             }
-        } catch (IncorrectClaimException e) {
-            SecurityContextHolder.clearContext();
-            log.debug("Invalid JWT token.");
-            response.sendError(403);
-        } catch (UsernameNotFoundException e){
-            SecurityContextHolder.clearContext();
-            log.debug("Can't find user.");
-            response.sendError(403);
+        } catch (Exception e) {
+
         }
         filterChain.doFilter(request,response);
     }
