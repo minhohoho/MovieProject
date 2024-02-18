@@ -3,6 +3,7 @@ package com.example.movieproject.controller;
 import com.example.movieproject.common.oauth2.info.UserPrincipal;
 import com.example.movieproject.dto.request.ReviewCreateRequestDTO;
 import com.example.movieproject.dto.response.ReviewCreateResponseDTO;
+import com.example.movieproject.dto.response.ReviewLikeResponse;
 import com.example.movieproject.dto.response.ReviewResponse;
 import com.example.movieproject.service.ReviewService;
 import io.swagger.annotations.ApiOperation;
@@ -16,6 +17,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 
 @RestController
@@ -37,19 +39,29 @@ public class ReviewController {
         return ResponseEntity.ok().body(reviewService.createReview(requestDTO,movieId,memberId));
     }
 
-    @ApiOperation(value="리뷰 단건 조회",notes="")
+    @ApiOperation(value="리뷰 단건 조회",notes="영화에 대한 리뷰를 확인 할 수 있다")
     @GetMapping("/getReview/{reviewId}")
     public ResponseEntity<ReviewResponse> getReview(@PathVariable Long reviewId){
 
         return ResponseEntity.ok().body(reviewService.getReview(reviewId));
     }
-    @ApiOperation(value="영화 한편의 모든 리뷰 조회",notes="")
+    @ApiOperation(value="영화 한편의 모든 리뷰 조회",notes="해당 영화의 모든 리뷰를 확인 할 수 있다")
     @GetMapping("/getReviewList/{movieId}")
-    public ResponseEntity<Page<ReviewResponse>> getReviewList(
-            @PathVariable Long movieId,
-             Pageable pageable
+    public ResponseEntity<List<ReviewResponse>> getReviewList(
+            @PathVariable Long movieId
     ){
-        return ResponseEntity.ok().body(reviewService.getReviewList(movieId, pageable));
+        return ResponseEntity.ok().body(reviewService.getReviewList(movieId));
+    }
+
+    @ApiOperation(value="리뷰 좋아요",notes = "로그인을 한 회원이라면 리뷰에 좋아요를 달 수 있다")
+    @PostMapping("/reviewLike/{reviewId}")
+    public ResponseEntity<ReviewLikeResponse> reviewLike(
+            @PathVariable Long reviewId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ){
+        Long memberId = userPrincipal.getId();
+
+        return ResponseEntity.ok().body(reviewService.reviewLike(reviewId,memberId));
     }
 
 
