@@ -44,7 +44,7 @@ public class SecurityConfig {
 
 
         http.authorizeRequests()
-                .antMatchers("/oauth2/**","/api/movie/**","/api/staff/**") // 현재 기능 테스트를 위해 임시로 품
+                .antMatchers("/oauth2/**","/api/movie/**","/api/staff/**","/api/review/**") // 현재 기능 테스트를 위해 임시로 품
                 .permitAll()
                 .anyRequest().authenticated();
 
