@@ -15,19 +15,19 @@ import java.util.List;
 @Builder
 public class MovieCreateRequestDTO {
 
-    @ApiParam(value="영화 제목")
+
     private String title;
-    @ApiParam(value="상영 관람 나이")
+
     private Age age;
-    @ApiParam(value="개봉일자")
+
     private Date openingDate;
-    @ApiParam(value="상영시간")
+
     private String duringTime;
-    @ApiParam(value="영화 테마")
+
     private MovieTheme movieTheme;
-    @ApiParam(value="영화 내용")
+
     private String content;
-    @ApiParam(value="영화 소속 배우 및 감독")
+
     private List<MovieStaffCreateRequestDTO> movieStaffListDTO;
 
     public static Movie dtoToEntity(MovieCreateRequestDTO requestDTO){

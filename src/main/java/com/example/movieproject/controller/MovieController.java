@@ -2,9 +2,11 @@ package com.example.movieproject.controller;
 
 
 import com.example.movieproject.dto.request.MovieCreateRequestDTO;
+import com.example.movieproject.dto.request.MovieUpdateRequestDTO;
 import com.example.movieproject.dto.request.SearchRequestDTO;
 import com.example.movieproject.dto.response.MovieCreateResponseDTO;
 import com.example.movieproject.dto.response.MovieListResponseDTO;
+import com.example.movieproject.dto.response.MovieUpdateResponseDTO;
 import com.example.movieproject.dto.response.MovieWithScoreResponseDTO;
 import com.example.movieproject.service.MovieService;
 import com.example.movieproject.service.ReviewService;
@@ -16,6 +18,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,7 +52,7 @@ public class MovieController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @ApiOperation(value="영화 단건 조회",notes = "영화에 대한 정보를 가져오고, 평균 평점을 구해온다")
+    @ApiOperation(value="영화 단건 조회 api",notes = "영화에 대한 정보를 가져오고, 평균 평점을 구해온다")
     @GetMapping("/getMovie/{movieId}")
     public ResponseEntity<MovieWithScoreResponseDTO> getMovie(
             @PathVariable Long movieId){
@@ -59,6 +63,22 @@ public class MovieController {
         return ResponseEntity.ok().body(movieWithScoreResponseDTO);
     }
 
+    @ApiOperation(value = "영화 정보 수정 api",notes = "영화에 대한 정보를 수정한다")
+    @PutMapping("/update/{movieId}")
+    public ResponseEntity<MovieUpdateResponseDTO> updateMovieInfo(
+            @PathVariable Long movieId,
+            @Valid @RequestBody MovieUpdateRequestDTO updateDTO
+    ){
+        return ResponseEntity.ok().body(movieService.updateMovie(movieId,updateDTO));
+    }
+
+    @ApiOperation(value="영화 정보 삭제 api",notes = "영화 기본 정보를 삭제하고 영화에 소속된 스태프도 삭제한다")
+    @DeleteMapping("/delete/{movieId}")
+    public ResponseEntity<Void> deleteMovie(
+            @PathVariable Long movieId
+    ){
+        return ResponseEntity.ok().build();
+    }
 
 
 
