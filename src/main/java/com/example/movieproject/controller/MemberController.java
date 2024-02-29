@@ -5,10 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/member")
 @RequiredArgsConstructor
@@ -22,6 +19,12 @@ public class MemberController {
     public ResponseEntity<Boolean> reissueToken(@RequestParam String refreshToken){
 
         return ResponseEntity.ok().body(memberService.reissueToken(refreshToken));
+    }
+
+    @ApiOperation(value = "회원 정보 수정 api",notes = "로그인 한 회원이라면 자신의 정보를 수정 가능하다")
+    @PutMapping("/update/")
+    public ResponseEntity<Void> updateMemberInfo(){
+        return ResponseEntity.ok().build();
     }
 
 

@@ -5,11 +5,9 @@ import com.example.movieproject.domain.Movie;
 import com.example.movieproject.domain.MovieStaff;
 import com.example.movieproject.dto.request.MovieCreateRequestDTO;
 import com.example.movieproject.dto.request.MovieStaffCreateRequestDTO;
+import com.example.movieproject.dto.request.MovieUpdateRequestDTO;
 import com.example.movieproject.dto.request.SearchRequestDTO;
-import com.example.movieproject.dto.response.MovieCreateResponseDTO;
-import com.example.movieproject.dto.response.MovieListResponseDTO;
-import com.example.movieproject.dto.response.MovieStaffResponseDTO;
-import com.example.movieproject.dto.response.MovieWithScoreResponseDTO;
+import com.example.movieproject.dto.response.*;
 import com.example.movieproject.exceptionHandle.MovieException;
 import com.example.movieproject.repository.MovieRepository;
 import com.example.movieproject.repository.MovieStaffRepository;
@@ -69,6 +67,28 @@ public class MovieService {
                 .averageScore(averageScore)
                 .build();
     }
+
+    @Transactional
+    public MovieUpdateResponseDTO updateMovie(Long movieId, MovieUpdateRequestDTO updateDTO){
+
+        Movie movie = movieRepository.findById(movieId).orElseThrow();
+
+        movie.updateMovie(updateDTO);
+
+        return MovieUpdateResponseDTO.EntityToDTO(movie);
+    }
+
+    @Transactional
+    public void deleteMovie(Long movieId){
+
+        Movie movie = movieRepository.findById(movieId).orElseThrow();
+
+        movieStaffRepository.deleteByMovie(movie);
+
+        movieRepository.deleteById(movie.getMovieId());
+    }
+
+
 
 
 

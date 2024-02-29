@@ -56,9 +56,14 @@ spring:
     host: localhost
     port: 6379
 jwt:
-  secret: 13k21k323j12o3adfskfnfsjkfjhfsdjfhjfjfsdjfhjfjhrkhrjhjh543jh53jh45kjw24244j4kjk4k24k4kj3242k4k3243jk4kjl
+  secret: ${JWT_SECRET_KEY}
   refresh-token-validity-in-seconds: 1209600
   access-token-validity-in-seconds: 432000
+
+kakao:
+  rest:
+    api:
+      key: ${KAKAO_RESTAPI_KEY}
 
 
 

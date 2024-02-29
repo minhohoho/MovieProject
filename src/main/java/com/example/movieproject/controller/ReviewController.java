@@ -27,7 +27,7 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @ApiOperation(value = "리뷰 생성",notes = "가입된 회원들은 리뷰를 달 수 있다")
+    @ApiOperation(value = "리뷰 생성  api",notes = "가입된 회원들은 리뷰를 달 수 있다")
     @PostMapping("/create/{movieId}")
     @Secured({"USER","ADMIN"})
     public ResponseEntity<ReviewCreateResponseDTO> createReview(
@@ -39,13 +39,13 @@ public class ReviewController {
         return ResponseEntity.ok().body(reviewService.createReview(requestDTO,movieId,memberId));
     }
 
-    @ApiOperation(value="리뷰 단건 조회",notes="영화에 대한 리뷰를 확인 할 수 있다")
+    @ApiOperation(value="리뷰 단건 조회 api",notes="영화에 대한 리뷰를 확인 할 수 있다")
     @GetMapping("/getReview/{reviewId}")
     public ResponseEntity<ReviewResponse> getReview(@PathVariable Long reviewId){
 
         return ResponseEntity.ok().body(reviewService.getReview(reviewId));
     }
-    @ApiOperation(value="영화 한편의 모든 리뷰 조회",notes="해당 영화의 모든 리뷰를 확인 할 수 있다")
+    @ApiOperation(value="영화 한편의 모든 리뷰 조회 api",notes="해당 영화의 모든 리뷰를 확인 할 수 있다")
     @GetMapping("/getReviewList/{movieId}")
     public ResponseEntity<List<ReviewResponse>> getReviewList(
             @PathVariable Long movieId
@@ -53,7 +53,7 @@ public class ReviewController {
         return ResponseEntity.ok().body(reviewService.getReviewList(movieId));
     }
 
-    @ApiOperation(value="리뷰 좋아요",notes = "로그인을 한 회원이라면 리뷰에 좋아요를 달 수 있다")
+    @ApiOperation(value="리뷰 좋아요 api",notes = "로그인을 한 회원이라면 리뷰에 좋아요를 달 수 있다")
     @PostMapping("/reviewLike/{reviewId}")
     public ResponseEntity<ReviewLikeResponse> reviewLike(
             @PathVariable Long reviewId,
@@ -64,7 +64,24 @@ public class ReviewController {
         return ResponseEntity.ok().body(reviewService.reviewLike(reviewId,memberId));
     }
 
+    @ApiOperation(value = "회원이 작성한 리뷰 조회 api",notes = "권한 인증이 된 회원은 자기가 작성한 모든 리뷰를 읽을 수 있다")
+    @GetMapping("/")
+    public ResponseEntity<Void> getMemberReviewList(){
+        return ResponseEntity.ok().build();
+    }
 
+    @ApiOperation(value="리뷰 정보 수정 api",notes = "로그인이 된 회원이라면 자기가 작성한 리뷰 내용을 수정할 수 있다")
+    @PutMapping("/")
+    public ResponseEntity<Void> updateReviewInfo(){
+
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value="리뷰 정보 삭제 api",notes = "로그인이 된 회원이라면 자기가 작성한 리뷰를 삭제 할 수 있다")
+    @DeleteMapping("/")
+    public ResponseEntity<Void> deleteReview(){
+        return ResponseEntity.ok().build();
+    }
 
 
 

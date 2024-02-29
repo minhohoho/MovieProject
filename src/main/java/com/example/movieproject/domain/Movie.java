@@ -2,6 +2,7 @@ package com.example.movieproject.domain;
 
 import com.example.movieproject.common.type.Age;
 import com.example.movieproject.common.type.MovieTheme;
+import com.example.movieproject.dto.request.MovieUpdateRequestDTO;
 import lombok.*;
 import javax.persistence.*;
 import java.util.Date;
@@ -42,4 +43,16 @@ public class Movie{
     @Lob
     @Column(nullable = false)
     private String content;
+
+    public void updateMovie(MovieUpdateRequestDTO updateDTO){
+     this.title=updateDTO.getTitle();
+     this.age=updateDTO.getAge();
+     this.openingDate=updateDTO.getOpeningDate();
+     this.duringTime=updateDTO.getDuringTime();
+     this.movieTheme=updateDTO.getMovieTheme();
+     this.content=updateDTO.getContent();
+    }
+
+
+
 }
