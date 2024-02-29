@@ -1,5 +1,6 @@
 package com.example.movieproject.domain;
 
+import com.example.movieproject.dto.request.StaffUpdateRequestDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,6 +29,12 @@ public class Staff {
 
     @Column(nullable = false)
     private String nation;
+
+    public void updateStaff(StaffUpdateRequestDTO updateDTO){
+    this.name =updateDTO.getName();
+    this.birth=updateDTO.getBirth();
+    this.nation=updateDTO.getNation();
+    }
 
 
 
