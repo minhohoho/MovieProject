@@ -1,5 +1,6 @@
 package com.example.movieproject.domain;
 
+import com.example.movieproject.dto.request.ReviewUpdateRequestDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -33,4 +34,12 @@ public class Review extends BaseEntity{
 
     @Column(nullable = false)
     private Double score;
+
+    public void updateReview(ReviewUpdateRequestDTO updateDTO){
+        this.content = updateDTO.getContent();
+        this.score   = updateDTO.getScore();
+    }
+
+
+
 }

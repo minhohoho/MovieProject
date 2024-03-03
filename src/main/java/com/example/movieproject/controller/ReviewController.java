@@ -2,6 +2,7 @@ package com.example.movieproject.controller;
 
 import com.example.movieproject.common.oauth2.info.UserPrincipal;
 import com.example.movieproject.dto.request.ReviewCreateRequestDTO;
+import com.example.movieproject.dto.request.ReviewUpdateRequestDTO;
 import com.example.movieproject.dto.response.ReviewCreateResponseDTO;
 import com.example.movieproject.dto.response.ReviewLikeResponse;
 import com.example.movieproject.dto.response.ReviewResponse;
@@ -55,6 +56,7 @@ public class ReviewController {
 
     @ApiOperation(value="리뷰 좋아요 api",notes = "로그인을 한 회원이라면 리뷰에 좋아요를 달 수 있다")
     @PostMapping("/reviewLike/{reviewId}")
+    @Secured({"USER","ADMIN"})
     public ResponseEntity<ReviewLikeResponse> reviewLike(
             @PathVariable Long reviewId,
             @AuthenticationPrincipal UserPrincipal userPrincipal
@@ -65,21 +67,45 @@ public class ReviewController {
     }
 
     @ApiOperation(value = "회원이 작성한 리뷰 조회 api",notes = "권한 인증이 된 회원은 자기가 작성한 모든 리뷰를 읽을 수 있다")
-    @GetMapping("/")
-    public ResponseEntity<Void> getMemberReviewList(){
+    @GetMapping("/getMyReviewList")
+    @Secured({"USER","ADMIN"})
+    public ResponseEntity<Void> getMemberReviewList(
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ){
+
+        Long memberId = userPrincipal.getId();
+
         return ResponseEntity.ok().build();
     }
 
     @ApiOperation(value="리뷰 정보 수정 api",notes = "로그인이 된 회원이라면 자기가 작성한 리뷰 내용을 수정할 수 있다")
-    @PutMapping("/")
-    public ResponseEntity<Void> updateReviewInfo(){
+    @PutMapping("/update/{reviewId}")
+    @Secured({"USER","ADMIN"})
+    public ResponseEntity<Void> updateReviewInfo(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable Long reviewId,
+            @RequestBody ReviewUpdateRequestDTO updateDTO
+            ){
+
+        Long memberId = userPrincipal.getId();
+
+        reviewService.updateReviewInfo(reviewId,memberId,updateDTO);
 
         return ResponseEntity.ok().build();
     }
 
     @ApiOperation(value="리뷰 정보 삭제 api",notes = "로그인이 된 회원이라면 자기가 작성한 리뷰를 삭제 할 수 있다")
-    @DeleteMapping("/")
-    public ResponseEntity<Void> deleteReview(){
+    @DeleteMapping("/delete/{reviewId}")
+    @Secured({"USER","ADMIN"})
+    public ResponseEntity<Void> deleteReview(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable Long reviewId
+    ){
+
+        Long memberId = userPrincipal.getId();
+
+        reviewService.deleteReview(reviewId,memberId);
+
         return ResponseEntity.ok().build();
     }
 
