@@ -4,6 +4,8 @@ import com.example.movieproject.domain.Staff;
 import com.example.movieproject.dto.request.StaffCreateRequestDTO;
 import com.example.movieproject.dto.request.StaffUpdateRequestDTO;
 import com.example.movieproject.dto.response.StaffUpdateResponseDTO;
+import com.example.movieproject.exceptionHandle.ErrorList;
+import com.example.movieproject.exceptionHandle.StaffException;
 import com.example.movieproject.repository.MovieStaffRepository;
 import com.example.movieproject.repository.StaffRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +35,8 @@ public class StaffService {
     @Transactional
     public StaffUpdateResponseDTO updateStaffInfo(Long staffId, StaffUpdateRequestDTO updateDTO){
 
-        Staff staff = staffRepository.findById(staffId).orElseThrow();
+        Staff staff = staffRepository.findById(staffId)
+                .orElseThrow(()->new StaffException(ErrorList.NOT_EXIST_STAFF));
 
         staff.updateStaff(updateDTO);
 
@@ -43,7 +46,8 @@ public class StaffService {
     @Transactional
     public void deleteStaff(Long staffId){
 
-        Staff staff = staffRepository.findById(staffId).orElseThrow();
+        Staff staff = staffRepository.findById(staffId)
+                .orElseThrow(()->new StaffException(ErrorList.NOT_EXIST_STAFF));
 
         movieStaffRepository.deleteByStaff(staff);
 

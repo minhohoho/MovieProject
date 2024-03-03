@@ -6,12 +6,13 @@ import com.example.movieproject.dto.kakaoApi.KakakoApiResponseDTO;
 import com.example.movieproject.dto.request.MyCinemaCreateRequestDTO;
 import com.example.movieproject.dto.request.MyCinemaUpdateRequestDTO;
 import com.example.movieproject.dto.response.*;
+import com.example.movieproject.exceptionHandle.ErrorList;
+import com.example.movieproject.exceptionHandle.MyCinemaException;
 import com.example.movieproject.repository.CinemaScheduleRepository;
 import com.example.movieproject.repository.MemberRepository;
 import com.example.movieproject.repository.MyCinemaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +30,8 @@ public class MyCinemaService {
     @Transactional
     public MyCinemaCreateResponseDTO createMyCinema(Long memberId, MyCinemaCreateRequestDTO requestDTO, KakakoApiResponseDTO kakakoApiResponseDTO){
 
-        Member member = memberRepository.findById(memberId).orElseThrow();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(()-> new MyCinemaException(ErrorList.NOT_EXIST_MEMBER));
 
         MyCinema myCinema = MyCinemaCreateRequestDTO.dtoToEntity(member,requestDTO,kakakoApiResponseDTO);
 
@@ -63,7 +65,9 @@ public class MyCinemaService {
     @Transactional(readOnly = true)
     public List<MyCinemaListResponseDTO> getMyCinemaList(Long memberId){
 
-        Member member = memberRepository.findById(memberId).orElseThrow();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(()-> new MyCinemaException(ErrorList.NOT_EXIST_MEMBER));
+
 
         return myCinemaRepository.findByMember(member).stream().map(MyCinemaListResponseDTO::entityToDTO).toList();
     }
@@ -95,13 +99,9 @@ public class MyCinemaService {
         return CinemaResponseDTO.entityToDTO(myCinema,name);
    }
 
-
-
-
-
     private void validate(MyCinema myCinema,Long memberId){
         if(!Objects.equals(myCinema.getMember().getMemberId(),memberId)){
-            throw new RuntimeException();
+            throw new MyCinemaException(ErrorList.NOT_MATCH_MY_CINEMA);
         }
     }
 
