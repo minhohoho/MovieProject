@@ -43,7 +43,8 @@ public class ReviewService {
     @Transactional
     public ReviewCreateResponseDTO createReview(ReviewCreateRequestDTO requestDTO,Long movieId,Long memberId){
 
-        movieRepository.findById(movieId).orElseThrow(()-> new ReviewException(ErrorList.NOT_EXIST_MOVIE));
+        movieRepository.findById(movieId)
+                .orElseThrow(()-> new ReviewException(ErrorList.NOT_EXIST_MOVIE));
 
         Review review = ReviewCreateRequestDTO.dtoToEntity(requestDTO,movieId,memberId);
 
@@ -66,8 +67,10 @@ public class ReviewService {
     @Transactional
     public ReviewLikeResponse reviewLike(Long reviewId, Long memberId){
 
-        Review review = reviewRepository.findById(reviewId).orElseThrow();
-        Member member = memberRepository.findById(memberId).orElseThrow();
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(()->new ReviewException(ErrorList.NOT_EXIST_REVIEW));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(()->new ReviewException(ErrorList.NOT_EXIST_MEMBER));
         ReviewLikeResponse reviewLikeResponse = new ReviewLikeResponse();
 
         Optional<ReviewLike> reviewLike = reviewLikeRepository.findByReviewAndMember(review,member);
@@ -95,13 +98,8 @@ public class ReviewService {
         return reviewRepository.findReviewList(movie).stream().map(ReviewResponse::EntityToDTO).toList();
     }
 
-
     @Transactional(readOnly = true)
-    public void getMyReviewList(Long memberId){
-
-
-
-    }
+    public void getMyReviewList(Long memberId){}
 
     @Transactional
     public void updateReviewInfo(Long reviewId, Long memberId, ReviewUpdateRequestDTO updateDTO){
@@ -114,15 +112,11 @@ public class ReviewService {
 
     @Transactional
     public void deleteReview(Long reviewId,Long memberId){
-        Review review = reviewRepository.findById(reviewId).orElseThrow();
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(()->new ReviewException(ErrorList.NOT_EXIST_REVIEW));
 
         validate(review,memberId);
-
-        //reviewLikeRepository의 해당 리뷰 삭제
-
-
         reviewRepository.deleteById(review.getReviewId());
-
     }
 
     private void validate(Review review,Long memberId){

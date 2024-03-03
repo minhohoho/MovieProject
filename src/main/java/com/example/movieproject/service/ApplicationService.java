@@ -91,7 +91,8 @@ public class ApplicationService {
     @Transactional(readOnly = true)
     public List<MyApplicationListResponseDTO> getMyApplicationList(Long memberId, LocalDateTime startDate,LocalDateTime endDate){
 
-        Member member = memberRepository.findById(memberId).orElseThrow(()->new ApplicationException(ErrorList.NOT_EXIST_MEMBER));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(()->new ApplicationException(ErrorList.NOT_EXIST_MEMBER));
 
 
         return applicationRepository.findMyApplicationList(member,startDate,endDate).stream().map(MyApplicationListResponseDTO::entityToDTO).toList();

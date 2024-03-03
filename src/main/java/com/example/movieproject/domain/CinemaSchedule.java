@@ -1,6 +1,7 @@
 package com.example.movieproject.domain;
 
 import com.example.movieproject.common.type.CinemaScheduleStatus;
+import com.example.movieproject.dto.request.CinemaScheduleUpdateRequestDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -48,6 +49,13 @@ public class CinemaSchedule {
 
     public void addHeadCount(Integer headCount){
         this.headCount=headCount;
+    }
+
+    public void updateCinemaSchedule(CinemaScheduleUpdateRequestDTO updateDTO){
+       this.showDate = updateDTO.getShowDate();
+       this.price = updateDTO.getPrice();
+       this.headCount = updateDTO.getHeadCount();
+       this.limitCount = updateDTO.getLimitCount();
     }
 
 

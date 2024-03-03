@@ -8,6 +8,7 @@ import com.example.movieproject.dto.request.MovieStaffCreateRequestDTO;
 import com.example.movieproject.dto.request.MovieUpdateRequestDTO;
 import com.example.movieproject.dto.request.SearchRequestDTO;
 import com.example.movieproject.dto.response.*;
+import com.example.movieproject.exceptionHandle.ErrorList;
 import com.example.movieproject.exceptionHandle.MovieException;
 import com.example.movieproject.repository.MovieRepository;
 import com.example.movieproject.repository.MovieStaffRepository;
@@ -71,7 +72,7 @@ public class MovieService {
     @Transactional
     public MovieUpdateResponseDTO updateMovie(Long movieId, MovieUpdateRequestDTO updateDTO){
 
-        Movie movie = movieRepository.findById(movieId).orElseThrow();
+        Movie movie = movieRepository.findById(movieId).orElseThrow(()->new MovieException(NOT_EXIST_MOVIE));
 
         movie.updateMovie(updateDTO);
 
@@ -81,7 +82,7 @@ public class MovieService {
     @Transactional
     public void deleteMovie(Long movieId){
 
-        Movie movie = movieRepository.findById(movieId).orElseThrow();
+        Movie movie = movieRepository.findById(movieId).orElseThrow(()->new MovieException(NOT_EXIST_MOVIE));
 
         movieStaffRepository.deleteByMovie(movie);
 

@@ -1,7 +1,7 @@
 package com.example.movieproject.controller;
 
-import com.example.movieproject.common.oauth2.info.UserPrincipal;
 import com.example.movieproject.dto.request.CinemaScheduleCreateRequestDTO;
+import com.example.movieproject.dto.request.CinemaScheduleUpdateRequestDTO;
 import com.example.movieproject.dto.response.CinemaScheduleCreateResponseDTO;
 import com.example.movieproject.dto.response.CinemaScheduleListResponseDTO;
 import com.example.movieproject.dto.response.CinemaScheduleResponseDTO;
@@ -9,7 +9,6 @@ import com.example.movieproject.service.CinemaScheduleService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,6 +44,22 @@ public class CinemaScheduleController {
             @PathVariable Long cinemaScheduleId
     ){
         return ResponseEntity.ok().body(cinemaScheduleService.getCinemaSchedule(cinemaScheduleId));
+    }
+
+    @PutMapping("/update/{cinemaScheduleId}")
+    public ResponseEntity<Boolean> updateCinemaSchedule(
+            @PathVariable Long cinemaScheduleId,
+            @RequestBody CinemaScheduleUpdateRequestDTO updateDTO
+            ){
+
+        return ResponseEntity.ok().body(cinemaScheduleService.updateCinemaSchedule(cinemaScheduleId,updateDTO));
+    }
+
+    @DeleteMapping("/delete/{{cinemaScheduleId}}")
+    public ResponseEntity<Boolean> deleteCinemaSchedule(
+            @PathVariable Long cinemaScheduleId){
+
+        return ResponseEntity.ok().body(cinemaScheduleService.deleteCinemaSchedule(cinemaScheduleId));
     }
 
 
