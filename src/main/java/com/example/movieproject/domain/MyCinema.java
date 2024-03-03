@@ -1,6 +1,8 @@
 package com.example.movieproject.domain;
 
 
+import com.example.movieproject.dto.kakaoApi.KakakoApiResponseDTO;
+import com.example.movieproject.dto.request.MyCinemaUpdateRequestDTO;
 import lombok.*;
 
 
@@ -13,7 +15,9 @@ import javax.persistence.*;
 @Entity
 @ToString
 @Getter
-@Table
+@Table(indexes = {
+        @Index(columnList = "createdAt")
+})
 public class MyCinema extends BaseEntity {
 
     @Id
@@ -43,4 +47,16 @@ public class MyCinema extends BaseEntity {
 
     @Column(nullable = false)
     private double longitude;
+
+    public void updateMyCinema(MyCinemaUpdateRequestDTO updateDTO, KakakoApiResponseDTO kakakoApiResponseDTO){
+        this.cinemaName= updateDTO.getCinemaName();
+        this.cinemaDetail= updateDTO.getCinemaDetail();
+        this.cinemaItem= updateDTO.getCinemaItem();
+        this.addressName= updateDTO.getAddressName();
+        this.latitude = kakakoApiResponseDTO.getDocumentList().get(0).getLatitude();
+        this.longitude= kakakoApiResponseDTO.getDocumentList().get(0).getLongitude();
+    }
+
+
+
 }

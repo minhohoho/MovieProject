@@ -1,9 +1,12 @@
 package com.example.movieproject.dto.request;
 
+import com.example.movieproject.common.type.CinemaScheduleStatus;
 import com.example.movieproject.domain.CinemaSchedule;
 import com.example.movieproject.domain.Movie;
 import com.example.movieproject.domain.MyCinema;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -28,6 +31,7 @@ public class CinemaScheduleCreateRequestDTO {
                 .headCount(requestDTO.getHeadCount())
                 .headCount(requestDTO.getHeadCount())
                 .limitCount(requestDTO.getLimitCount())
+                .cinemaScheduleStatus(CinemaScheduleStatus.OPEN)
                 .build();
     }
 

@@ -17,7 +17,7 @@ public class ReviewResponse {
     public static ReviewResponse EntityToDTO(Review review){
         return ReviewResponse.builder()
                 .reviewId(review.getReviewId())
-                .name(review.getMember().getName()) // n+1 문제 리펙토링 필요
+                .name(review.getMember().getName())
                 .content(review.getContent())
                 .score(review.getScore())
                 .build();

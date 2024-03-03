@@ -1,5 +1,6 @@
 package com.example.movieproject.domain;
 
+import com.example.movieproject.common.type.CinemaScheduleStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -37,5 +38,18 @@ public class CinemaSchedule {
     private Integer headCount;
 
     private Integer limitCount;
+
+    @Enumerated(EnumType.STRING)
+    private CinemaScheduleStatus cinemaScheduleStatus;
+
+    public void changeStatus(CinemaScheduleStatus cinemaScheduleStatus){
+        this.cinemaScheduleStatus=cinemaScheduleStatus;
+    }
+
+    public void addHeadCount(Integer headCount){
+        this.headCount=headCount;
+    }
+
+
 
 }

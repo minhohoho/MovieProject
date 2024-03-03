@@ -5,6 +5,7 @@ import com.example.movieproject.domain.Movie;
 import com.example.movieproject.domain.Review;
 import com.example.movieproject.domain.ReviewLike;
 import com.example.movieproject.dto.request.ReviewCreateRequestDTO;
+import com.example.movieproject.dto.request.ReviewUpdateRequestDTO;
 import com.example.movieproject.dto.response.ReviewCreateResponseDTO;
 import com.example.movieproject.dto.response.ReviewLikeResponse;
 import com.example.movieproject.dto.response.ReviewResponse;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -85,8 +87,6 @@ public class ReviewService {
 
         return reviewLikeResponse;
     }
-
-
     @Transactional(readOnly = true)
     public List<ReviewResponse> getReviewList(Long movieId){
 
@@ -95,6 +95,41 @@ public class ReviewService {
         return reviewRepository.findReviewList(movie).stream().map(ReviewResponse::EntityToDTO).toList();
     }
 
+
+    @Transactional(readOnly = true)
+    public void getMyReviewList(Long memberId){
+
+
+
+    }
+
+    @Transactional
+    public void updateReviewInfo(Long reviewId, Long memberId, ReviewUpdateRequestDTO updateDTO){
+        Review review = reviewRepository.findById(reviewId).orElseThrow();
+
+        validate(review,memberId);
+
+        review.updateReview(updateDTO);
+    }
+
+    @Transactional
+    public void deleteReview(Long reviewId,Long memberId){
+        Review review = reviewRepository.findById(reviewId).orElseThrow();
+
+        validate(review,memberId);
+
+        //reviewLikeRepository의 해당 리뷰 삭제
+
+
+        reviewRepository.deleteById(review.getReviewId());
+
+    }
+
+    private void validate(Review review,Long memberId){
+        if(Objects.equals(review.getMember().getMemberId(),memberId)){
+         throw new RuntimeException();
+        }
+    }
 
 
 }
