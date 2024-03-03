@@ -34,6 +34,10 @@ public class MovieStaff {
     @Setter
     private Role role;
 
+    public void updateMovieStaff(Role role){
+        this.role=role;
+    }
+
 
 
 
