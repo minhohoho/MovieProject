@@ -2,7 +2,6 @@ package com.example.movieproject.controller;
 
 import com.example.movieproject.service.MemberService;
 import io.swagger.annotations.ApiOperation;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
