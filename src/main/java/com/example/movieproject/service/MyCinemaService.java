@@ -13,11 +13,17 @@ import com.example.movieproject.repository.MemberRepository;
 import com.example.movieproject.repository.MyCinemaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +32,9 @@ public class MyCinemaService {
     private final MyCinemaRepository myCinemaRepository;
     private final MemberRepository memberRepository;
     private final CinemaScheduleRepository cinemaScheduleRepository;
+    private final RedisTemplate<String,String> redisTemplate;
+
+    private static final String RANKING = "RANKING";
 
     @Transactional
     public MyCinemaCreateResponseDTO createMyCinema(Long memberId, MyCinemaCreateRequestDTO requestDTO, KakakoApiResponseDTO kakakoApiResponseDTO){
@@ -96,7 +105,24 @@ public class MyCinemaService {
 
         String name = myCinema.getMember().getName();
 
-        return CinemaResponseDTO.entityToDTO(myCinema,name);
+        String cinemaName = myCinema.getCinemaName();
+
+       try {
+           redisTemplate.opsForZSet().incrementScore(RANKING, cinemaName, 1);
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+
+       return CinemaResponseDTO.entityToDTO(myCinema,name);
+   }
+
+   @Transactional(readOnly = true)
+   public List<CinemaRakingResponseDTO> getCinemaRanking(){
+
+       Set<ZSetOperations.TypedTuple<String>> result = redisTemplate.opsForZSet().reverseRangeWithScores(RANKING, 0, 9);
+
+
+       return  result.stream().map(CinemaRakingResponseDTO::entityToDTO).collect(Collectors.toList());
    }
 
     private void validate(MyCinema myCinema,Long memberId){

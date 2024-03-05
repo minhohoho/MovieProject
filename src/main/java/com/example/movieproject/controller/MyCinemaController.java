@@ -112,6 +112,12 @@ public class MyCinemaController {
         return ResponseEntity.ok().body(myCinemaService.getCinema(myCinemaId));
     }
 
+    @ApiOperation(value = "영화관 실시간 순위 조회 api",notes = "현재 조회된 순")
+    @GetMapping("/getCinemaRanking")
+    public ResponseEntity<List<CinemaRakingResponseDTO>> getCinemaRanking(){
+
+        return ResponseEntity.ok().body(myCinemaService.getCinemaRanking());
+    }
 
 
 

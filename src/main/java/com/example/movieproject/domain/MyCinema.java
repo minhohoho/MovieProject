@@ -30,7 +30,7 @@ public class MyCinema extends BaseEntity {
     @ToString.Exclude
     private Member member;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String cinemaName;
 
     @Column(nullable = false)
