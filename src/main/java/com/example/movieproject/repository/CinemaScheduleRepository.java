@@ -25,7 +25,4 @@ public interface CinemaScheduleRepository extends JpaRepository<CinemaSchedule,L
 
 
 
-
-
-
 }
