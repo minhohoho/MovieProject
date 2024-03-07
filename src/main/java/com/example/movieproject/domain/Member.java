@@ -4,6 +4,7 @@ import com.example.movieproject.common.oauth2.info.OAuth2UserInfo;
 import com.example.movieproject.common.type.AuthProvider;
 import com.example.movieproject.common.type.UserRole;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -34,11 +35,18 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private AuthProvider authProvider;
 
+    @ColumnDefault("0")
+    private int count;
+
     public Member update(OAuth2UserInfo oAuth2UserInfo){
         this.name = oAuth2UserInfo.getName();
         this.oauth2Id = oAuth2UserInfo.getOAuth2Id();
 
         return this;
+    }
+
+    public void changeCount(int count){
+        this.count = count;
     }
 
 

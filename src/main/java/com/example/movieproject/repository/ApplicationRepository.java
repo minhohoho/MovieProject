@@ -1,6 +1,7 @@
 package com.example.movieproject.repository;
 
 import com.example.movieproject.domain.Application;
+import com.example.movieproject.domain.CinemaSchedule;
 import com.example.movieproject.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +19,8 @@ public interface ApplicationRepository extends JpaRepository<Application,Long> {
             "where a.member= :member " +
             "AND a.createdAt BETWEEN :startDate AND :endDate")
     List<Application> findMyApplicationList(Member member, LocalDateTime startDate,LocalDateTime endDate);
+
+    void deleteAllByCinemaSchedule(CinemaSchedule cinemaSchedule);
 
 
 

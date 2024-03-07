@@ -4,11 +4,9 @@ import com.example.movieproject.domain.Member;
 import com.example.movieproject.domain.Movie;
 import com.example.movieproject.domain.Review;
 import lombok.*;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,14 +22,10 @@ public class ReviewCreateRequestDTO {
     @NotNull
     private Double score;
 
-    public static Review dtoToEntity(ReviewCreateRequestDTO requestDTO,Long movieId,Long memberId){
+    public static Review dtoToEntity(ReviewCreateRequestDTO requestDTO,Movie movie,Member member){
         return Review.builder()
-                .member(Member.builder()
-                        .memberId(memberId)
-                        .build())
-                .movie(Movie.builder()
-                        .MovieId(movieId)
-                        .build())
+                .member(member)
+                .movie(movie)
                 .content(requestDTO.getContent())
                 .score(requestDTO.getScore())
                 .build();

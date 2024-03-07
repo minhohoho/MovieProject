@@ -2,6 +2,7 @@ package com.example.movieproject.domain;
 
 import com.example.movieproject.dto.request.ReviewUpdateRequestDTO;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -35,9 +36,16 @@ public class Review extends BaseEntity{
     @Column(nullable = false)
     private Double score;
 
+    @ColumnDefault("0")
+    private int reviewCnt;
+
     public void updateReview(ReviewUpdateRequestDTO updateDTO){
         this.content = updateDTO.getContent();
         this.score   = updateDTO.getScore();
+    }
+
+    public void ChangeReviewCnt(int reviewCnt){
+        this.reviewCnt = reviewCnt;
     }
 
 
