@@ -16,7 +16,8 @@ public enum ErrorList {
     NOT_EXIST_CINEMA_SCHEDULE(HttpStatus.BAD_REQUEST,"존재하지 않는 영화 스케줄입니다"),
     NOT_EXIST_MY_CINEMA(HttpStatus.BAD_REQUEST,"영화관이 존재하지않습니다"),
     NOT_MATCH_MY_CINEMA(HttpStatus.UNAUTHORIZED,"권한이 존재하지 않습니다"),
-    NOT_EXIST_REVIEW(HttpStatus.BAD_REQUEST,"존재하지 않는 리뷰입니다");
+    NOT_EXIST_REVIEW(HttpStatus.BAD_REQUEST,"존재하지 않는 리뷰입니다"),
+    ALREADY_EXIST_SCHEDULE(HttpStatus.BAD_REQUEST,"이미 영화관의 시간대에 존재합니다");
 
 
     private final HttpStatus httpStatus;

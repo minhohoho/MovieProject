@@ -1,10 +1,12 @@
 package com.example.movieproject.controller;
 
+import com.example.movieproject.common.type.Income;
 import com.example.movieproject.dto.request.CinemaScheduleCreateRequestDTO;
 import com.example.movieproject.dto.request.CinemaScheduleUpdateRequestDTO;
 import com.example.movieproject.dto.response.CinemaScheduleCreateResponseDTO;
 import com.example.movieproject.dto.response.CinemaScheduleListResponseDTO;
 import com.example.movieproject.dto.response.CinemaScheduleResponseDTO;
+import com.example.movieproject.dto.response.YearIncomeResponseDTO;
 import com.example.movieproject.service.CinemaScheduleService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -63,11 +65,14 @@ public class CinemaScheduleController {
 
         return ResponseEntity.ok().body(cinemaScheduleService.deleteCinemaSchedule(cinemaScheduleId));
     }
-    
 
+    @ApiOperation(value = "영화관 수입 조회 api",notes = "권한 인증이 된 회원이라면 수입을 타입별로 조회할 수 있다")
+    @GetMapping("/getMyCinemaIncome/{myCinemaId}")
+    public ResponseEntity<List<YearIncomeResponseDTO>> getMyCinemaIncome(
+            @PathVariable Long myCinemaId,
+            @RequestParam Income income){
 
-
-
-
+        return ResponseEntity.ok().body(cinemaScheduleService.getYearIncome(myCinemaId,income));
+    }
 
 }

@@ -16,7 +16,9 @@ import java.util.Date;
 @Builder
 public class CinemaScheduleCreateRequestDTO {
 
+
     private Date showDate;
+    private Date endDate;
     private Integer price;
     private Integer headCount;
     private Integer limitCount;
@@ -27,8 +29,8 @@ public class CinemaScheduleCreateRequestDTO {
                 .myCinema(myCinema)
                 .movie(movie)
                 .showDate(requestDTO.getShowDate())
+                .endDate(requestDTO.getEndDate())
                 .price(requestDTO.getPrice())
-                .headCount(requestDTO.getHeadCount())
                 .headCount(requestDTO.getHeadCount())
                 .limitCount(requestDTO.getLimitCount())
                 .cinemaScheduleStatus(CinemaScheduleStatus.OPEN)

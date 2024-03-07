@@ -11,12 +11,18 @@ public class MyCinemaListResponseDTO {
     private Long myCinemaId;
     private String cinemaName;
 
+    //
+    private String addressName;
+    private double distance;
+
     public static MyCinemaListResponseDTO entityToDTO(MyCinema myCinema){
         return MyCinemaListResponseDTO.builder()
                 .myCinemaId(myCinema.getMyCinemaId())
                 .cinemaName(myCinema.getCinemaName())
                 .build();
     }
+
+
 
 
 }

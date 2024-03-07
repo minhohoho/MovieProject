@@ -13,6 +13,7 @@ public class ReviewResponse {
     private String name;
     private String content;
     private double score;
+    private int reviewCnt;
 
     public static ReviewResponse EntityToDTO(Review review){
         return ReviewResponse.builder()
@@ -20,6 +21,7 @@ public class ReviewResponse {
                 .name(review.getMember().getName())
                 .content(review.getContent())
                 .score(review.getScore())
+                .reviewCnt(review.getReviewCnt())
                 .build();
     }
 

@@ -34,6 +34,9 @@ public class CinemaSchedule {
     @Temporal(TemporalType.TIMESTAMP)
     private Date showDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date endDate;
+
     private Integer price;
 
     private Integer headCount;
@@ -53,6 +56,7 @@ public class CinemaSchedule {
 
     public void updateCinemaSchedule(CinemaScheduleUpdateRequestDTO updateDTO){
        this.showDate = updateDTO.getShowDate();
+       this.endDate= updateDTO.getEndDate();
        this.price = updateDTO.getPrice();
        this.headCount = updateDTO.getHeadCount();
        this.limitCount = updateDTO.getLimitCount();

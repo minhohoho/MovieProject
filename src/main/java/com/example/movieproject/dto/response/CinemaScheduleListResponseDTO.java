@@ -15,6 +15,8 @@ public class CinemaScheduleListResponseDTO {
     private String title;
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Seoul")
     private Date showDate;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Seoul")
+    private Date endDate;
     private Integer headCount;
     private Integer limitCount;
 
@@ -23,6 +25,7 @@ public class CinemaScheduleListResponseDTO {
                 .cinemaScheduleId(cinemaSchedule.getCinemaScheduleId())
                 .title(cinemaSchedule.getMovie().getTitle())
                 .showDate(cinemaSchedule.getShowDate())
+                .endDate(cinemaSchedule.getEndDate())
                 .headCount(cinemaSchedule.getHeadCount())
                 .limitCount(cinemaSchedule.getLimitCount())
                 .build();

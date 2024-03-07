@@ -119,6 +119,16 @@ public class MyCinemaController {
         return ResponseEntity.ok().body(myCinemaService.getCinemaRanking());
     }
 
+    @ApiOperation(value = "")
+    @GetMapping("/getCinemaByDistance")
+    public ResponseEntity<List<MyCinemaListResponseDTO>> getCinemaByDistance(
+            @RequestParam String addressName){
+
+        KakakoApiResponseDTO kakakoApiResponseDTO = kakaoAddressSearchService.getAddress(addressName);
+
+        return ResponseEntity.ok().body(myCinemaService.getCinemaByDistance(kakakoApiResponseDTO));
+    }
+
 
 
 }

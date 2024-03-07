@@ -1,5 +1,6 @@
 package com.example.movieproject.repository;
 
+import com.example.movieproject.domain.Member;
 import com.example.movieproject.domain.Movie;
 import com.example.movieproject.domain.Review;
 import org.springframework.data.domain.Page;
@@ -15,13 +16,16 @@ public interface ReviewRepository extends JpaRepository<Review,Long>{
    @Query("select avg (r.score) from Review r where r.movie.MovieId= :movieId")
    Double averageMovieScore(Long movieId);
 
-//   Page<Review> findAllByMovie(Movie movie,Pageable pageable);
 
    @Query("select r from Review r join fetch r.member where r.reviewId= :reviewId")
    Review findReviewInfo(Long reviewId);
 
    @Query("select r from Review r join fetch r.member where r.movie= :movie")
    List<Review> findReviewList(Movie movie);
+
+   List<Review> findByMember(Member member);
+
+
 
 
 }

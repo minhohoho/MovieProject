@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +31,9 @@ public class MyCinemaService {
     private final CinemaScheduleRepository cinemaScheduleRepository;
     private final RedisTemplate<String,String> redisTemplate;
 
-    private static final String RANKING = "RANKING";
+    private static final int MAX_SEARCH_COUNT = 3; // 최대 검색 갯수
+    private static final double RADIUS_KM = 10.0; // 반경 10 km
+    private static final String RANKING = "MyCinemaRANKING";
 
     @Transactional
     public MyCinemaCreateResponseDTO createMyCinema(Long memberId, MyCinemaCreateRequestDTO requestDTO, KakakoApiResponseDTO kakakoApiResponseDTO){
@@ -124,6 +123,41 @@ public class MyCinemaService {
 
        return  result.stream().map(CinemaRakingResponseDTO::entityToDTO).collect(Collectors.toList());
    }
+
+   @Transactional(readOnly = true)
+   public List<MyCinemaListResponseDTO> getCinemaByDistance(KakakoApiResponseDTO kakakoApiResponseDTO){
+
+        List<MyCinema> myCinemaList = myCinemaRepository.findAll();
+
+        double MyLatitude = kakakoApiResponseDTO.getDocumentList().get(0).getLatitude();
+
+        double MyLongitude = kakakoApiResponseDTO.getDocumentList().get(0).getLongitude();
+
+        return myCinemaList.stream().map(myCinema -> MyCinemaListResponseDTO
+                .builder()
+                        .myCinemaId(myCinema.getMyCinemaId())
+                        .cinemaName(myCinema.getCinemaName())
+                        .addressName(myCinema.getAddressName())
+                        .distance(calculateDistance(MyLatitude,MyLongitude, myCinema.getLatitude(), myCinema.getLongitude()))
+                .build())
+                        .filter(myCinemaListResponseDTO -> myCinemaListResponseDTO.getDistance()<=RADIUS_KM)
+                        .sorted(Comparator.comparing(MyCinemaListResponseDTO::getDistance))
+                        .limit(MAX_SEARCH_COUNT)
+                        .collect(Collectors.toList());
+   }
+
+   private double calculateDistance(double lat1,double lon1,double lat2,double lon2){
+        lat1= Math.toRadians(lat1);
+        lon1= Math.toRadians(lon1);
+        lat2= Math.toRadians(lat2);
+        lon2= Math.toRadians(lon2);
+
+       double earthRadius = 6371; //Kilometers
+
+        return earthRadius * Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon1 - lon2));
+   }
+
+
 
     private void validate(MyCinema myCinema,Long memberId){
         if(!Objects.equals(myCinema.getMember().getMemberId(),memberId)){

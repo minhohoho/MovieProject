@@ -6,6 +6,7 @@ import com.example.movieproject.domain.Review;
 import com.example.movieproject.domain.ReviewLike;
 import com.example.movieproject.dto.request.ReviewCreateRequestDTO;
 import com.example.movieproject.dto.request.ReviewUpdateRequestDTO;
+import com.example.movieproject.dto.response.MyReviewListResponseDTO;
 import com.example.movieproject.dto.response.ReviewCreateResponseDTO;
 import com.example.movieproject.dto.response.ReviewLikeResponse;
 import com.example.movieproject.dto.response.ReviewResponse;
@@ -43,10 +44,17 @@ public class ReviewService {
     @Transactional
     public ReviewCreateResponseDTO createReview(ReviewCreateRequestDTO requestDTO,Long movieId,Long memberId){
 
-        movieRepository.findById(movieId)
+        Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(()-> new ReviewException(ErrorList.NOT_EXIST_MOVIE));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(()-> new ReviewException(ErrorList.NOT_EXIST_MEMBER));
 
-        Review review = ReviewCreateRequestDTO.dtoToEntity(requestDTO,movieId,memberId);
+        int count = member.getCount(); // 멤버가 현재까지 평가한 영화 수 삭제
+        count++;
+        log.info(String.valueOf(count));
+        member.changeCount(count);
+
+        Review review = ReviewCreateRequestDTO.dtoToEntity(requestDTO,movie,member);
 
         return ReviewCreateResponseDTO.EntityToDTO(reviewRepository.save(review));
     }
@@ -61,8 +69,6 @@ public class ReviewService {
         Review review = reviewRepository.findReviewInfo(reviewId);
         return  ReviewResponse.EntityToDTO(review);
     }
-
-
 
     @Transactional
     public ReviewLikeResponse reviewLike(Long reviewId, Long memberId){
@@ -80,11 +86,22 @@ public class ReviewService {
                             .review(review)
                             .member(member)
                     .build());
+
+            int reviewCnt = review.getReviewCnt();;
+            reviewCnt++;
+            review.ChangeReviewCnt(reviewCnt);
+
             reviewLikeResponse.setResult(true);
             reviewLikeResponse.setMessage("좋아요 성공!");
             return reviewLikeResponse;
         }
            reviewLikeRepository.delete(reviewLike.get());
+
+           int reviewCnt = review.getReviewCnt();
+           reviewCnt--;
+           review.ChangeReviewCnt(reviewCnt);
+
+
            reviewLikeResponse.setResult(false);
            reviewLikeResponse.setMessage("좋아요 취소 성공!");
 
@@ -98,8 +115,6 @@ public class ReviewService {
         return reviewRepository.findReviewList(movie).stream().map(ReviewResponse::EntityToDTO).toList();
     }
 
-    @Transactional(readOnly = true)
-    public void getMyReviewList(Long memberId){}
 
     @Transactional
     public void updateReviewInfo(Long reviewId, Long memberId, ReviewUpdateRequestDTO updateDTO){
@@ -116,8 +131,39 @@ public class ReviewService {
                 .orElseThrow(()->new ReviewException(ErrorList.NOT_EXIST_REVIEW));
 
         validate(review,memberId);
-        reviewRepository.deleteById(review.getReviewId());
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(()->new ReviewException(ErrorList.NOT_EXIST_MEMBER));
+
+        int count = member.getCount(); // 멤버가 현재까지 평가한 영화 숫자 --
+        count --;
+        log.info(String.valueOf(count));
+        member.changeCount(count);
+
+        reviewLikeRepository.deleteByReview(review); // 해당 리뷰의 좋아요 모두 삭제
+
+        reviewRepository.deleteById(review.getReviewId()); //해당 리뷰 삭제
     }
+
+    @Transactional(readOnly = true)
+    public MyReviewListResponseDTO getMemberReviewList(Long memberId){
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(()->new ReviewException(ErrorList.NOT_EXIST_MEMBER));
+
+        int count = member.getCount();
+        List<ReviewResponse> responseDTOList = reviewRepository.findByMember(member).stream().map(ReviewResponse::EntityToDTO).toList();
+
+        MyReviewListResponseDTO myReviewListResponseDTO = MyReviewListResponseDTO.builder()
+                .count(count)
+                .reviewResponseList(responseDTOList)
+                .build();
+
+        return myReviewListResponseDTO;
+    }
+
+
+
 
     private void validate(Review review,Long memberId){
         if(Objects.equals(review.getMember().getMemberId(),memberId)){
