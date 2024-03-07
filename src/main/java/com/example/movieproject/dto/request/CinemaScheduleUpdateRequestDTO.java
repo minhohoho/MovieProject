@@ -11,6 +11,7 @@ import java.util.Date;
 public class CinemaScheduleUpdateRequestDTO {
 
     private Date showDate;
+    private Date endDate;
     private Integer price;
     private Integer headCount;
     private Integer limitCount;
