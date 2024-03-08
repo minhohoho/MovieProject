@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -67,6 +68,11 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public ReviewResponse getReview(Long reviewId){
         Review review = reviewRepository.findReviewInfo(reviewId);
+
+        if(ObjectUtils.isEmpty(review))  {
+            throw new ReviewException(ErrorList.NOT_EXIST_REVIEW);
+        }
+
         return  ReviewResponse.EntityToDTO(review);
     }
 
@@ -167,7 +173,7 @@ public class ReviewService {
 
     private void validate(Review review,Long memberId){
         if(Objects.equals(review.getMember().getMemberId(),memberId)){
-         throw new RuntimeException();
+         throw new ReviewException(ErrorList.NOT_EXIST_MEMBER);
         }
     }
 
