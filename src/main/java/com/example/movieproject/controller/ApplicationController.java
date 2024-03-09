@@ -22,15 +22,16 @@ public class ApplicationController {
     private final ApplicationService applicationService;
 
     @ApiOperation(value = "영화관 예매 api",notes = "영화관의 인원의 유효성 검사를 하고 유효하다면 +1하고 데이터베이스에 기록한다")
-    @PostMapping("/create/{cinemaScheduleId}")
+    @PostMapping("/create/{cinemaScheduleId}/{myCinemaId}")
     public ResponseEntity<Boolean> createApply(
             @PathVariable Long cinemaScheduleId,
-            @AuthenticationPrincipal UserPrincipal userPrincipal
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable Long myCinemaId
             ){
 
         Long memberId = userPrincipal.getId();
 
-        return ResponseEntity.ok(applicationService.createApply(cinemaScheduleId,memberId));
+        return ResponseEntity.ok(applicationService.createApply(cinemaScheduleId,memberId,myCinemaId));
     }
     @ApiOperation(value = "영화관 예매 취소 api",notes = "영화관 예매를 취소한다 유효성 검사후 -1을 반영시킨다")
     @DeleteMapping("/delete/{applicationId}")
