@@ -1,9 +1,8 @@
 package com.example.movieproject.service;
 
+import com.example.movieproject.common.type.AlertType;
 import com.example.movieproject.common.type.CinemaScheduleStatus;
-import com.example.movieproject.domain.Application;
-import com.example.movieproject.domain.CinemaSchedule;
-import com.example.movieproject.domain.Member;
+import com.example.movieproject.domain.*;
 import com.example.movieproject.dto.response.MyApplicationListResponseDTO;
 import com.example.movieproject.exceptionHandle.ApplicationException;
 import com.example.movieproject.exceptionHandle.ErrorList;
@@ -12,8 +11,11 @@ import com.example.movieproject.repository.ApplicationRepository;
 import com.example.movieproject.repository.CinemaScheduleRepository;
 import com.example.movieproject.repository.MemberRepository;
 
+import com.example.movieproject.repository.MyCinemaRepository;
+import com.example.movieproject.repository.alert.AlertRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,9 +32,13 @@ public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final CinemaScheduleRepository cinemaScheduleRepository;
     private final MemberRepository memberRepository;
+    private final MyCinemaRepository myCinemaRepository;
+    private final AlertRepository alertRepository;
+
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
-    public Boolean createApply(Long cinemaScheduleId,Long memberId){
+    public Boolean createApply(Long cinemaScheduleId,Long memberId,Long myCinemaId){
 
         CinemaSchedule cinemaSchedule = cinemaScheduleRepository.findById(cinemaScheduleId)
                 .orElseThrow(()->new ReviewException(ErrorList.NOT_EXIST_CINEMA_SCHEDULE));
@@ -56,6 +62,21 @@ public class ApplicationService {
                 .build();
 
         applicationRepository.save(application);
+
+
+        // 알림 -> 내 영화관을 만든 사람에게 신청 알림
+        MyCinema myCinema = myCinemaRepository.findMyCinemaInfo(myCinemaId);
+        Member cinemaPer = memberRepository.findById(myCinema.getMember().getMemberId()).orElseThrow();
+
+        Alert savedAlert = Alert.builder()
+                .member(cinemaPer)
+                .sender(member.getName()) // 당신의 영화관에 "아무개"가 신청하였습니다를 알려주기 위해서
+                .isRead(false)
+                .alertType(AlertType.NEW_APPLICATION)
+                .build();
+        alertRepository.save(savedAlert);
+
+        eventPublisher.publishEvent(savedAlert);
         return true;
     }
 
