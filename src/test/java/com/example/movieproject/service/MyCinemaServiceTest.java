@@ -53,13 +53,12 @@ public class MyCinemaServiceTest {
         MyCinema myCinema = MyCinema.builder()
                 .myCinemaId(1L)
                 .member(member)
-                .cinemaItem("test")
                 .latitude(12.12)
                 .longitude(12.12)
                 .build();
 
         MyCinemaCreateRequestDTO requestDTO = MyCinemaCreateRequestDTO.builder()
-                .cinemaItem("test")
+                .addressName("")
                 .build();
 
         MetaDTO metaDTO = new MetaDTO(1);
@@ -92,7 +91,7 @@ public class MyCinemaServiceTest {
         given(memberRepository.findById(anyLong())).willReturn(Optional.empty());
 
         MyCinemaCreateRequestDTO requestDTO = MyCinemaCreateRequestDTO.builder()
-                .cinemaItem("test")
+                .addressName("")
                 .build();
 
         MetaDTO metaDTO = new MetaDTO(1);
