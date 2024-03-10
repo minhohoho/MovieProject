@@ -12,8 +12,6 @@ public class MyCinemaUpdateRequestDTO {
 
     private String cinemaDetail;
 
-    private String cinemaItem;
-
     private String addressName;
 
 

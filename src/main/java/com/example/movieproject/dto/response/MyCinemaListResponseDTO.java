@@ -11,7 +11,6 @@ public class MyCinemaListResponseDTO {
     private Long myCinemaId;
     private String cinemaName;
 
-    //
     private String addressName;
     private double distance;
 

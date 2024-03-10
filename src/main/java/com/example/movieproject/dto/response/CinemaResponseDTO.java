@@ -13,7 +13,6 @@ public class CinemaResponseDTO {
     private String name;
     private String cinemaName;
     private String cinemaDetail;
-    private String cinemaItem;
     private String addressName;
     private double latitude;
     private double longitude;
@@ -24,7 +23,6 @@ public class CinemaResponseDTO {
                 .name(name)
                 .cinemaName(myCinema.getCinemaName())
                 .cinemaDetail(myCinema.getCinemaDetail())
-                .cinemaItem(myCinema.getCinemaItem())
                 .addressName(myCinema.getAddressName())
                 .latitude(myCinema.getLatitude())
                 .longitude(myCinema.getLongitude())
