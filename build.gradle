@@ -34,7 +34,13 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     implementation 'mysql:mysql-connector-java:8.0.32'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+
     //채팅관련
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.boot:spring-boot-starter-reactor-netty'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
 
     //시큐리티  && jwt
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
