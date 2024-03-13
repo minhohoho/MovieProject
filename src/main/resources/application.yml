@@ -65,8 +65,8 @@ kakao:
     api:
       key: ${KAKAO_RESTAPI_KEY}
 
-
-
+server:
+  port: 8080
 
 
 

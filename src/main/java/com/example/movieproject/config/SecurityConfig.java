@@ -15,6 +15,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @EnableWebSecurity
 @Configuration
@@ -44,9 +47,8 @@ public class SecurityConfig {
 
 
         http.authorizeRequests()
-                .antMatchers("/oauth2/**","/api/movie/**","/api/staff/**") // 현재 기능 테스트를 위해 임시로 품
-                .permitAll()
-                .anyRequest().authenticated();
+                        .anyRequest()
+                .permitAll();
 
         http.oauth2Login()
                 .userInfoEndpoint().userService(oauth2Service)
