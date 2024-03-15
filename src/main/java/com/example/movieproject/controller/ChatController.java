@@ -25,7 +25,6 @@ public class ChatController {
     public ChatResponseDTO enterUser(@DestinationVariable Long chatRoomId,@Payload ChatMessageRequestDTO requestDTO){
 
 
-
         return chatService.enterUser(chatRoomId,requestDTO.getMemberId());
     }
 

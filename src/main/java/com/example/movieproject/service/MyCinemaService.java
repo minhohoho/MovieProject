@@ -18,6 +18,7 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,6 +31,7 @@ public class MyCinemaService {
     private final MemberRepository memberRepository;
     private final CinemaScheduleRepository cinemaScheduleRepository;
     private final RedisTemplate<String,String> redisTemplate;
+    private final ImageService imageService;
 
     private static final int MAX_SEARCH_COUNT = 3; // 최대 검색 갯수
     private static final double RADIUS_KM = 10.0; // 반경 10 km
@@ -45,6 +47,23 @@ public class MyCinemaService {
 
         return MyCinemaCreateResponseDTO.entityToDTO(myCinemaRepository.save(myCinema));
     }
+
+    @Transactional
+    public String uploadImage(Long memberId, Long myCinemaId, MultipartFile file){
+
+        MyCinema myCinema = myCinemaRepository.findById(myCinemaId)
+                .orElseThrow();
+
+        validate(myCinema,memberId);
+
+        String myCinemaImageUrl = imageService.uploadImage(file);
+
+        myCinema.setMyCinemaImageUrl(myCinemaImageUrl);
+
+        return myCinemaImageUrl;
+    }
+
+
 
     @Transactional
     public void updateMyCinemaInfo(Long myCinemaId, Long memberId, MyCinemaUpdateRequestDTO updateDTO,KakakoApiResponseDTO kakakoApiResponseDTO){

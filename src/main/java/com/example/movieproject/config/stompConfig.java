@@ -1,5 +1,6 @@
 package com.example.movieproject.config;
 
+import com.example.movieproject.common.stomp.ChatErrorHandler;
 import com.example.movieproject.common.stomp.StompJwtHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -16,12 +17,14 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class stompConfig implements WebSocketMessageBrokerConfigurer {
 
     private final StompJwtHandler stompJwtHandler;
+    private final ChatErrorHandler chatErrorHandler;
 
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("*");
+        registry.setErrorHandler(chatErrorHandler);
     }
 
     @Override

@@ -16,6 +16,7 @@ public class CinemaResponseDTO {
     private String addressName;
     private double latitude;
     private double longitude;
+    private String myCinemaImageUrl;
 
     public static CinemaResponseDTO entityToDTO(MyCinema myCinema,String name){
         return CinemaResponseDTO.builder()
@@ -26,6 +27,7 @@ public class CinemaResponseDTO {
                 .addressName(myCinema.getAddressName())
                 .latitude(myCinema.getLatitude())
                 .longitude(myCinema.getLongitude())
+                .myCinemaImageUrl(myCinema.getMyCinemaImageUrl())
                 .build();
     }
 

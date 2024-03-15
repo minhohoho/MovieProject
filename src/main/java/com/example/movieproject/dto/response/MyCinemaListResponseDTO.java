@@ -10,6 +10,7 @@ import lombok.*;
 public class MyCinemaListResponseDTO {
     private Long myCinemaId;
     private String cinemaName;
+    private String myCinemaImageUrl;
 
     private String addressName;
     private double distance;
@@ -18,6 +19,7 @@ public class MyCinemaListResponseDTO {
         return MyCinemaListResponseDTO.builder()
                 .myCinemaId(myCinema.getMyCinemaId())
                 .cinemaName(myCinema.getCinemaName())
+                .myCinemaImageUrl(myCinema.getMyCinemaImageUrl())
                 .build();
     }
 
