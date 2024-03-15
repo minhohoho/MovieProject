@@ -16,6 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.List;
@@ -41,6 +42,20 @@ public class MyCinemaController {
 
         return ResponseEntity.ok().body(myCinemaService.createMyCinema(memberId,requestDTO,kakakoApiResponseDTO));
     }
+
+    @ApiOperation(value = "영화관 이미지 추가 api",notes = "회원은 자신의 영화관에 이미지를 추가할 수 있다")
+    @PostMapping("/upload/{myCinemaId}")
+    public ResponseEntity<String> uploadImage(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable Long myCinemaId,
+            @RequestBody MultipartFile multipartFile
+            ){
+
+        Long memberId = userPrincipal.getId();
+
+        return ResponseEntity.ok().body(myCinemaService.uploadImage(memberId,myCinemaId,multipartFile));
+    }
+
 
     @ApiOperation(value = "영화관 정보 수정 api",notes = "권한 인증이 된 사용자라면 영화관 정보를 수정 가능합니다")
     @PutMapping("/update/{myCinemaId}")

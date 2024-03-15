@@ -8,10 +8,13 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,18 +28,29 @@ public class StompJwtHandler implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel){
 
-        final StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message,StompHeaderAccessor.class);
 
+        if(StompCommand.CONNECT.equals(accessor.getCommand())){
 
-        if(StompCommand.CONNECT==accessor.getCommand()){
+            String authToken = accessor.getFirstNativeHeader("Authorization");
 
-            final String auth = accessor.getFirstNativeHeader("Authorization");
+            if( authToken != null){
 
-            Authentication authentication = jwtProvider.getAuthentication(auth);
+                Authentication  authentication = jwtProvider.getAuthentication(authToken);
 
-            accessor.setUser(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+//                new UserPrincipal()
+
+                accessor.setUser(authentication);
+            }else{
+                throw new MessageDeliveryException("UNAUTHORIZED");
+            }
 
         }
+
+
+
         return message;
     }
 }

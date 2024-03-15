@@ -45,12 +45,18 @@ public class MyCinema extends BaseEntity {
     @Column(nullable = false)
     private double longitude;
 
+    private String myCinemaImageUrl;
+
     public void updateMyCinema(MyCinemaUpdateRequestDTO updateDTO, KakakoApiResponseDTO kakakoApiResponseDTO){
         this.cinemaName= updateDTO.getCinemaName();
         this.cinemaDetail= updateDTO.getCinemaDetail();
         this.addressName= updateDTO.getAddressName();
         this.latitude = kakakoApiResponseDTO.getDocumentList().get(0).getLatitude();
         this.longitude= kakakoApiResponseDTO.getDocumentList().get(0).getLongitude();
+    }
+
+    public void setMyCinemaImageUrl(String myCinemaImageUrl){
+        this.myCinemaImageUrl = myCinemaImageUrl;
     }
 
 
