@@ -193,23 +193,6 @@ public class ReviewService {
         return myReviewListResponseDTO;
     }
 
-    @Transactional(readOnly = true)
-    public MyReviewListResponseDTO getOtherReviewList(Long memberId){
-
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(()->new ReviewException(ErrorList.NOT_EXIST_MEMBER));
-
-        int count = member.getCount();
-        List<ReviewResponse> responseDTOList = reviewRepository.findByMember(member).stream().map(ReviewResponse::EntityToDTO).toList();
-
-        MyReviewListResponseDTO myReviewListResponseDTO = MyReviewListResponseDTO.builder()
-                .count(count)
-                .reviewResponseList(responseDTOList)
-                .build();
-
-        return myReviewListResponseDTO;
-    }
-
 
 
 
