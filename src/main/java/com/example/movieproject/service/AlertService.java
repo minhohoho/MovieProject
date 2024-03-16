@@ -56,7 +56,7 @@ public class AlertService {
 
         // 받을 사람 id
         Long memberId = saveAlert.getMember().getMemberId();
-        String eventId = memberId + "_" + System.currentTimeMillis(); // 데이터 유실 시점 파악 위함 g2
+        String eventId = memberId + "_" + System.currentTimeMillis(); // 데이터 유실 시점 파악 위함
         log.info(eventId);
 
         // 유저의 모든 SseEmitter 가져옴

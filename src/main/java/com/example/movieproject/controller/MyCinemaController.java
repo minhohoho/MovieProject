@@ -95,19 +95,16 @@ public class MyCinemaController {
 
         Long memberId = userPrincipal.getId();
 
-
         return ResponseEntity.ok().body(myCinemaService.getMyCinemaList(memberId));
     }
 
     @ApiOperation(value = "회원의 영화관 단건 조회 api",notes = "인증이 된 회원이라면 자신의 영화관을 단건 조회할 수 있습니다")
     @GetMapping("/getMyCinema/{myCinemaId}")
     public ResponseEntity<MyCinemaResponseDTO> getMyCinema(
-            @PathVariable Long myCinemaId,
-            @AuthenticationPrincipal UserPrincipal userPrincipal
-    ){
-        Long memberId = userPrincipal.getId();
+            @PathVariable Long myCinemaId
 
-        return ResponseEntity.ok().body(myCinemaService.getMyCinema(memberId,myCinemaId));
+    ){
+        return ResponseEntity.ok().body(myCinemaService.getMyCinema(myCinemaId));
     }
 
     @ApiOperation(value = "영화관 페이징 api",notes = "영화관 리스트를 페이징해서 보여줍니다")
@@ -121,7 +118,7 @@ public class MyCinemaController {
 
     @ApiOperation(value = "영화관 단건 조회 api",notes = "영화관에 대한 정보를 원하거나 예매를 원한다면 정보를 제공합니다")
     @GetMapping("/getCinema/{myCinemaId}")
-    public ResponseEntity<CinemaResponseDTO> getCinema(
+    public ResponseEntity<MyCinemaResponseDTO> getCinema(
             @PathVariable Long myCinemaId){
 
         return ResponseEntity.ok().body(myCinemaService.getCinema(myCinemaId));
