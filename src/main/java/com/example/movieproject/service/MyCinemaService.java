@@ -1,13 +1,16 @@
 package com.example.movieproject.service;
 
+import com.example.movieproject.domain.CinemaItem;
 import com.example.movieproject.domain.Member;
 import com.example.movieproject.domain.MyCinema;
 import com.example.movieproject.dto.kakaoApi.KakakoApiResponseDTO;
+import com.example.movieproject.dto.request.CinemaItemRequestDTO;
 import com.example.movieproject.dto.request.MyCinemaCreateRequestDTO;
 import com.example.movieproject.dto.request.MyCinemaUpdateRequestDTO;
 import com.example.movieproject.dto.response.*;
 import com.example.movieproject.exceptionHandle.ErrorList;
 import com.example.movieproject.exceptionHandle.MyCinemaException;
+import com.example.movieproject.repository.CinemaItemRepository;
 import com.example.movieproject.repository.CinemaScheduleRepository;
 import com.example.movieproject.repository.MemberRepository;
 import com.example.movieproject.repository.MyCinemaRepository;
@@ -32,6 +35,7 @@ public class MyCinemaService {
     private final CinemaScheduleRepository cinemaScheduleRepository;
     private final RedisTemplate<String,String> redisTemplate;
     private final ImageService imageService;
+    private final CinemaItemRepository cinemaItemRepository;
 
     private static final int MAX_SEARCH_COUNT = 3; // 최대 검색 갯수
     private static final double RADIUS_KM = 10.0; // 반경 10 km
@@ -45,7 +49,15 @@ public class MyCinemaService {
 
         MyCinema myCinema = MyCinemaCreateRequestDTO.dtoToEntity(member,requestDTO,kakakoApiResponseDTO);
 
-        return MyCinemaCreateResponseDTO.entityToDTO(myCinemaRepository.save(myCinema));
+        myCinemaRepository.save(myCinema);
+
+       List<CinemaItem> cinemaItemList = requestDTO.getCinemaItemRequestDTOList().stream()
+               .map(itemRequestDTO->CinemaItemRequestDTO.dtoTonEntity(itemRequestDTO,myCinema))
+               .toList();
+
+       cinemaItemRepository.saveAll(cinemaItemList);
+
+        return MyCinemaCreateResponseDTO.entityToDTO(myCinema);
     }
 
     @Transactional
@@ -100,30 +112,23 @@ public class MyCinemaService {
     }
 
     @Transactional(readOnly = true)
-    public MyCinemaResponseDTO getMyCinema(Long memberId,Long myCinemaId){
+    public MyCinemaResponseDTO getMyCinema(Long myCinemaId){
 
-         MyCinema myCinema = myCinemaRepository.findMyCinemaInfo(myCinemaId);
-
-         validate(myCinema,memberId);
-
-        return MyCinemaResponseDTO.entityToDTO(myCinema);
+        return cinemaItemRepository.getMyCinemaWithItemList(myCinemaId);
     }
 
     @Transactional(readOnly = true)
     public Page<CinemaListResponseDTO> getCinemaList(Pageable pageable){
 
-
         return  myCinemaRepository.findAll(pageable).map(CinemaListResponseDTO::entityToDTO);
     }
 
    @Transactional(readOnly = true)
-   public CinemaResponseDTO getCinema(Long myCinemaId){
+   public MyCinemaResponseDTO getCinema(Long myCinemaId){
 
-        MyCinema myCinema = myCinemaRepository.findMyCinemaInfo(myCinemaId);
+        MyCinemaResponseDTO myCinemaResponseDTO = cinemaItemRepository.getMyCinemaWithItemList(myCinemaId);
 
-        String name = myCinema.getMember().getName();
-
-        String cinemaName = myCinema.getCinemaName();
+        String cinemaName = myCinemaResponseDTO.getCinemaName();
 
        try {
            redisTemplate.opsForZSet().incrementScore(RANKING, cinemaName, 1);
@@ -131,7 +136,7 @@ public class MyCinemaService {
            e.printStackTrace();
        }
 
-       return CinemaResponseDTO.entityToDTO(myCinema,name);
+       return myCinemaResponseDTO;
    }
 
    @Transactional(readOnly = true)

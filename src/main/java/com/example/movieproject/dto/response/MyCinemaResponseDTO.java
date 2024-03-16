@@ -3,6 +3,8 @@ package com.example.movieproject.dto.response;
 import com.example.movieproject.domain.MyCinema;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -16,17 +18,7 @@ public class MyCinemaResponseDTO {
     private double latitude;
     private double longitude;
     private String myCinemaImageUrl;
+    private List<CinemaItemResponseDTO> cinemaItemResponseDTOList;
 
-    public static MyCinemaResponseDTO entityToDTO(MyCinema myCinema){
-        return MyCinemaResponseDTO.builder()
-                .myCinemaId(myCinema.getMyCinemaId())
-                .cinemaName(myCinema.getCinemaName())
-                .cinemaDetail(myCinema.getCinemaDetail())
-                .addressName(myCinema.getAddressName())
-                .latitude(myCinema.getLatitude())
-                .longitude(myCinema.getLongitude())
-                .myCinemaImageUrl(myCinema.getMyCinemaImageUrl())
-                .build();
-    }
 
 }

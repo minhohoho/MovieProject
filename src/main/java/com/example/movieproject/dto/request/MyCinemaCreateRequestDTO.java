@@ -6,6 +6,8 @@ import com.example.movieproject.domain.MyCinema;
 import com.example.movieproject.dto.kakaoApi.KakakoApiResponseDTO;
 import lombok.*;
 
+import java.util.List;
+
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,6 +20,8 @@ public class MyCinemaCreateRequestDTO {
     private String cinemaDetail;
 
     private String addressName;
+
+    private List<CinemaItemRequestDTO> cinemaItemRequestDTOList;
 
     public static MyCinema dtoToEntity(Member member,MyCinemaCreateRequestDTO requestDTO, KakakoApiResponseDTO kakakoApiResponseDTO){
       return

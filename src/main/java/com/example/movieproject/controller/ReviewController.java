@@ -72,6 +72,14 @@ public class ReviewController {
         return ResponseEntity.ok().body(reviewService.getMemberReviewList(memberId));
     }
 
+    @ApiOperation(value= "다른 회원이 작성한 리뷰 조회 api",notes = "")
+    @GetMapping("/getOtherReviewList/{memberId}")
+    public ResponseEntity<MyReviewListResponseDTO>  getOtherReviewList(@PathVariable Long memberId){
+
+        return ResponseEntity.ok().body(reviewService.getMemberReviewList(memberId));
+    }
+
+
     @ApiOperation(value="리뷰 정보 수정 api",notes = "로그인이 된 회원이라면 자기가 작성한 리뷰 내용을 수정할 수 있다")
     @PutMapping("/update/{reviewId}")
     public ResponseEntity<Void> updateReviewInfo(
